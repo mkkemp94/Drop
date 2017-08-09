@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 
 public class Drop extends ApplicationAdapter {
 	private Texture dropImage;
@@ -20,7 +21,8 @@ public class Drop extends ApplicationAdapter {
 	private SpriteBatch batch;
 
 	private Rectangle bucket;
-	
+	private Vector3 touchPos;
+
 	@Override
 	public void create () {
 
@@ -66,6 +68,15 @@ public class Drop extends ApplicationAdapter {
 		batch.begin();
 		batch.draw(bucketImage, bucket.x, bucket.y);
 		batch.end();
+
+		// Center bucket around touch
+		touchPos = new Vector3();
+
+		if (Gdx.input.isTouched()) {
+			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touchPos);
+			bucket.x = touchPos.x - 64 / 2;
+		}
 	}
 	
 	@Override
