@@ -9,8 +9,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+
+import java.util.Iterator;
 
 public class Drop extends ApplicationAdapter {
 	private Texture dropImage;
@@ -23,6 +28,10 @@ public class Drop extends ApplicationAdapter {
 
 	private Rectangle bucket;
 	private Vector3 touchPos;
+
+	// Better tha array list. Minimizes garbage.
+	private Array<Rectangle> raindrops;
+	private long lastDropTime;
 
 	@Override
 	public void create () {
@@ -52,6 +61,10 @@ public class Drop extends ApplicationAdapter {
 		bucket.y = 20;
 		bucket.width = 64;
 		bucket.height = 64;
+
+		// Create and spawn a raindrop
+		raindrops = new Array<Rectangle>();
+		spawnRaindrop();
 	}
 
 	@Override
@@ -68,6 +81,9 @@ public class Drop extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.draw(bucketImage, bucket.x, bucket.y);
+		for (Rectangle raindrop : raindrops) {
+			batch.draw(dropImage, raindrop.x, raindrop.y);
+		}
 		batch.end();
 
 		// Center bucket around touch
@@ -87,6 +103,34 @@ public class Drop extends ApplicationAdapter {
 		// Stay within screen limits
 		if (bucket.x < 0) bucket.x = 0;
 		if (bucket.x > 800 - 64) bucket.x = 800 - 64;
+
+		// Spawn a raindrop if enough time has passed
+		if (TimeUtils.nanoTime() - lastDropTime > 1000000000) spawnRaindrop();
+
+		// Make raindrops move
+		Iterator<Rectangle> iter = raindrops.iterator();
+		while (iter.hasNext()) {
+			Rectangle raindrop = iter.next();
+			raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
+			if (raindrop.y + 64 < 0) iter.remove();
+			if (raindrop.overlaps(bucket)) {
+				dropSound.play();
+				iter.remove();
+			}
+		}
+	}
+
+	/**
+	 * Spawns a raindrop at a random position at the top of the screen.
+	 */
+	private void spawnRaindrop() {
+		Rectangle raindrop = new Rectangle();
+		raindrop.x = MathUtils.random(0, 800-64);
+		raindrop.y = 480;
+		raindrop.width = 64;
+		raindrop.height = 64;
+		raindrops.add(raindrop);
+		lastDropTime = TimeUtils.nanoTime();
 	}
 	
 	@Override
