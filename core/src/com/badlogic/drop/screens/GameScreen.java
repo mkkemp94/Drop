@@ -42,6 +42,9 @@ public class GameScreen implements Screen {
     private long lastDropTime;
     int dropsGathered;
 
+    int timeToDrop;
+    int dropsFallen;
+
     public GameScreen(final Drop game) {
         this.game = game;
 
@@ -72,6 +75,9 @@ public class GameScreen implements Screen {
         // Create and spawn a raindrop
         raindrops = new Array<Rectangle>();
         spawnRaindrop();
+
+        timeToDrop = 200;
+        dropsFallen = 0;
     }
 
     /**
@@ -85,6 +91,8 @@ public class GameScreen implements Screen {
         raindrop.height = 64;
         raindrops.add(raindrop);
         lastDropTime = TimeUtils.nanoTime();
+        dropsFallen++;
+        if (dropsFallen % 5 == 0) timeToDrop += 50;
     }
 
     @Override
@@ -142,7 +150,7 @@ public class GameScreen implements Screen {
         Iterator<Rectangle> iter = raindrops.iterator();
         while (iter.hasNext()) {
             Rectangle raindrop = iter.next();
-            raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
+            raindrop.y -= timeToDrop * Gdx.graphics.getDeltaTime();
             if (raindrop.y + 64 < 0) {
                 iter.remove();
                 game.setScreen(new MainMenuScreen(game));
