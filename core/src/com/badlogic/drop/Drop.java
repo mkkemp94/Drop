@@ -1,6 +1,6 @@
 package com.badlogic.drop;
 
-import com.badlogic.drop.screens.GameScreen;
+import com.badlogic.drop.screens.MainMenuScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,7 +19,7 @@ public class Drop extends Game {
 		// Default is arial
 		font = new BitmapFont();
 
-		this.setScreen(new GameScreen(this));
+		this.setScreen(new MainMenuScreen(this));
 
 	}
 
