@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -26,6 +27,8 @@ public class GameScreen implements Screen {
 
     private Texture dropImage;
     private Texture bucketImage;
+    private Sprite bucketSprite;
+
     private Sound dropSound;
     private Music rainMusic;
 
@@ -61,6 +64,10 @@ public class GameScreen implements Screen {
         bucket.y = 20;
         bucket.width = 64;
         bucket.height = 64;
+
+        // Make sprite for bucket
+        bucketSprite = new Sprite(bucketImage,
+                ((int)bucket.width), ((int)bucket.height));
 
         // Create and spawn a raindrop
         raindrops = new Array<Rectangle>();
@@ -101,7 +108,10 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
-        game.batch.draw(bucketImage, bucket.x, bucket.y);
+        game.batch.draw(bucketSprite, bucket.x, bucket.y,
+                bucketSprite.getWidth()/2, bucketSprite.getHeight()/2,
+                bucketSprite.getWidth(), bucketSprite.getHeight(),
+                1f, 1.5f, 0f);
         for (Rectangle raindrop : raindrops) {
             game.batch.draw(dropImage, raindrop.x, raindrop.y);
         }
