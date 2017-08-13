@@ -32,11 +32,12 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
 
     private Rectangle bucket;
-    private Vector3 touchPos;
+    //private Vector3 touchPos;
 
     // Better tha array list. Minimizes garbage.
     private Array<Rectangle> raindrops;
     private long lastDropTime;
+    int dropsGathered;
 
     public GameScreen(final Drop game) {
         this.game = game;
@@ -48,8 +49,6 @@ public class GameScreen implements Screen {
         // Load sounds
         dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
-
-        // Set music to loop
         rainMusic.setLooping(true);
 
         // Create camera
@@ -101,6 +100,7 @@ public class GameScreen implements Screen {
         // Render bucket
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
+        game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
         game.batch.draw(bucketImage, bucket.x, bucket.y);
         for (Rectangle raindrop : raindrops) {
             game.batch.draw(dropImage, raindrop.x, raindrop.y);
@@ -108,8 +108,8 @@ public class GameScreen implements Screen {
         game.batch.end();
 
         // Center bucket around touch
-        touchPos = new Vector3();
         if (Gdx.input.isTouched()) {
+            Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
             bucket.x = touchPos.x - 64 / 2;
@@ -133,8 +133,12 @@ public class GameScreen implements Screen {
         while (iter.hasNext()) {
             Rectangle raindrop = iter.next();
             raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-            if (raindrop.y + 64 < 0) iter.remove();
+            if (raindrop.y + 64 < 0) {
+                iter.remove();
+                // TODO : Game over
+            }
             if (raindrop.overlaps(bucket)) {
+                dropsGathered++;
                 dropSound.play();
                 iter.remove();
             }

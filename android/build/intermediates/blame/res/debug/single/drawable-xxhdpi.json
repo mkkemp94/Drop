@@ -1,6 +1,10 @@
 [
     {
-        "merged": "/home/mkemp/LibGDX/Drop/android/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_launcher.png",
-        "source": "/home/mkemp/LibGDX/Drop/android/res/drawable-xxhdpi/ic_launcher.png"
+        "merged": "C:\\Users\\kempm\\Desktop\\libGDX\\Drop\\android\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi\\ic_launcher.png",
+        "source": "C:\\Users\\kempm\\Desktop\\libGDX\\Drop\\android\\res\\drawable-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\home\\mkemp\\LibGDX\\Drop\\android\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi\\ic_launcher.png",
+        "source": "C:\\home\\mkemp\\LibGDX\\Drop\\android\\res\\drawable-xxhdpi\\ic_launcher.png"
     }
 ]
